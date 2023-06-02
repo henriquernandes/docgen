@@ -33,11 +33,11 @@ const ForgotPassword = () => {
                     <Link href="/">
                         <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
                     </Link>
-                }>
+                }
+                width={"sm"}
+            >
                 <div className="mb-4 text-sm text-gray-600">
-                    Forgot your password? No problem. Just let us know your
-                    email address and we will email you a password reset link
-                    that will allow you to choose a new one.
+                    Esqueceu sua senha? Sem problemas. Apenas informe seu endereço de e-mail e enviaremos um link de redefinição de senha que permitirá que você escolha uma nova.
                 </div>
 
                 {/* Session Status */}

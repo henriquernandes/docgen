@@ -5,7 +5,7 @@ const AppLayout = ({ header, children }) => {
     const { user } = useAuth({ middleware: 'auth' })
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen flex flex-col bg-gray-100">
             <Navigation user={user} />
 
             {/* Page Heading */}
@@ -18,7 +18,7 @@ const AppLayout = ({ header, children }) => {
             }
 
             {/* Page Content */}
-            <main>{children}</main>
+            <main className="flex-1 flex w-full">{children}</main>
         </div>
     )
 }
