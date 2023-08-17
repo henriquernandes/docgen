@@ -7,10 +7,12 @@ O DocGen é um projeto de clone que tem como objetivo facilitar a documentação
 Certifique-se de ter as seguintes ferramentas instaladas em seu sistema:
 
 - Docker
+- Docker Compose
 - Composer
 - Git
 - PHP >= 8.1
 - Node.js >= 16.0
+- NPM
 
 ## Configuração inicial
 
