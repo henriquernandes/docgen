@@ -31,6 +31,8 @@ class Usuario extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['empresa'];
+
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);
@@ -90,5 +92,7 @@ class Usuario extends Authenticatable
         return $usuario;
     }
 
-
+    public function getEmpresaAttribute() {
+        return $this->empresa()->first();
+    }
 }

@@ -11,7 +11,7 @@ class Projeto extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['limite_usuarios', 'url_padrao', 'empresa_id'];
+    protected $fillable = ['titulo', 'limite_usuarios', 'url_padrao', 'empresa_id'];
 
     protected $searchableFields = ['*'];
 
