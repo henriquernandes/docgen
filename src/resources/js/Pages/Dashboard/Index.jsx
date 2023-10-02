@@ -142,13 +142,13 @@ export default function Dashboard({ auth, rotas, projeto_id }) {
                 <div className="flex-initial flex flex-col items-center gap-10 font-semibold pt-5 px-5 border-gray-300 border-r w-1/6 bg-white">
                     <span className="text-2xl">Objetos</span>
                     <button
-                        className="text-white bg-purple-500 px-10 py-3 rounded-3xl w-full"
+                        className="text-white hover:bg-purple-700 bg-purple-500 px-10 py-3 rounded-3xl w-full"
                         onClick={() => onAdd("GET")}
                     >
                         GET
                     </button>
                     <button
-                        className="text-white bg-sky-500 px-10 py-3 rounded-3xl w-full"
+                        className="text-white hover:bg-sky-700 bg-sky-500 px-10 py-3 rounded-3xl w-full"
                         onClick={() => onAdd("POST")}
                     >
                         POST
@@ -160,13 +160,13 @@ export default function Dashboard({ auth, rotas, projeto_id }) {
                         PUT
                     </button>
                     <button
-                        className="text-white bg-amber-600 px-10 py-3 rounded-3xl w-full"
+                        className="text-white hover:bg-amber-800 bg-amber-600 px-10 py-3 rounded-3xl w-full"
                         onClick={() => onAdd("PATCH")}
                     >
                         PATCH
                     </button>
                     <button
-                        className="text-white bg-red-700 px-10 py-3 rounded-3xl w-full"
+                        className="text-white hover:hover:bg-red-900 bg-red-700 px-10 py-3 rounded-3xl w-full"
                         onClick={() => onAdd("DELETE")}
                     >
                         DELETE
@@ -218,17 +218,17 @@ export default function Dashboard({ auth, rotas, projeto_id }) {
                     </div>
                     <div className="flex flex-col items-center gap-10">
                         <span className="text-2xl">Respostas</span>
-                        <button className="text-white bg-purple-500 px-10 py-3 rounded-3xl">
+                        <button className="text-white hover:bg-purple-700 bg-purple-500 px-10 py-3 rounded-3xl">
                             GET
                         </button>
-                        <button className="text-white bg-sky-500 px-10 py-3 rounded-3xl">
+                        <button className="text-white hover:bg-sky-700 bg-sky-500 px-10 py-3 rounded-3xl">
                             POST
                         </button>
                     </div>
                     <div className="w-full border-b border-gray-300"></div>
                     <div className="flex flex-col items-center gap-5">
                         <button
-                            className="text-white bg-green-600 px-10 py-3 rounded-3xl"
+                            className="text-white hover:bg-green-800 bg-green-600 px-10 py-3 rounded-3xl"
                             onClick={handleSubmit}
                         >
                             {data?.id ? "Atualizar" : "Criar"}

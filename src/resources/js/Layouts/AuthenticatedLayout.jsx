@@ -4,6 +4,8 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -23,10 +25,16 @@ export default function Authenticated({ user, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("projetos.index")}
+                                    active={route().current("projetos.index")}
                                 >
-                                    Dashboard
+                                    Projetos
+                                </NavLink>
+                                <NavLink
+                                    href={route("logs.index")}
+                                    active={route().current("logs.index")}
+                                >
+                                    Logs
                                 </NavLink>
                             </div>
                         </div>
@@ -169,6 +177,7 @@ export default function Authenticated({ user, header, children }) {
             )}
 
             <main>{children}</main>
+            <ToastContainer theme={'light'} autoClose={3000}/>
         </div>
     );
 }

@@ -15,6 +15,8 @@ class Empresa extends Model
 
     protected $searchableFields = ['*'];
 
+    protected $appends = ['projetos'];
+
     public function usuarios()
     {
         return $this->hasMany(Usuario::class);
@@ -22,7 +24,7 @@ class Empresa extends Model
 
     public function projetos()
     {
-        return $this->hasMany(Projeto::class);
+        return $this->hasMany(Projeto::class, 'empresa_id', 'id');
     }
 
     public static function createNewEmpresa($request){
@@ -40,5 +42,10 @@ class Empresa extends Model
             'email' => $request->email,
         ]);
         return $empresa;
+    }
+
+    public function getProjetosAttribute()
+    {
+        return $this->projetos()->get();
     }
 }

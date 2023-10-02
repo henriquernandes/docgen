@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RotaPostRequest;
 use App\Http\Requests\RotaUpdateRequest;
 use App\Models\Rota;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -39,7 +40,7 @@ class RotasController extends Controller
         ]);
     }
 
-    public function update(RotaUpdateRequest $request, int $id): Response|RedirectResponse
+    public function update(RotaUpdateRequest $request, int $id): Response|RedirectResponse|JsonResponse
     {
         $request->validated();
 
@@ -66,7 +67,7 @@ class RotasController extends Controller
         ]);
     }
 
-    public function destroy(int $id): Response|RedirectResponse
+    public function destroy(int $id): Response|RedirectResponse|JsonResponse
     {
         if (empty($id)) {
             return response()->json([
