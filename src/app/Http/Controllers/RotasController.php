@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RotaPostRequest;
 use App\Http\Requests\RotaUpdateRequest;
+use App\Models\Autenticacao;
+use App\Models\CorpoEnvioResposta;
+use App\Models\Metodo;
 use App\Models\Rota;
+use App\Models\RotaParametro;
+use App\Models\Usuario;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,14 +19,15 @@ use Inertia\Response;
 
 class RotasController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, int $projeto_id): Response
     {
-        $rotas = Rota::getAllRotas(6);
+        $rotas = Rota::getAllRotas($projeto_id);
 
         return Inertia::render('Dashboard/Index', [
             'auth' => $request->user(),
             'rotas' => $rotas,
-            'projeto_id' => 6,
+            'autenticacoes' => Autenticacao::getAllAutenticoes($projeto_id),
+            'projeto_id' => $projeto_id,
         ]);
     }
 
@@ -30,13 +36,21 @@ class RotasController extends Controller
         $request->validated();
         $rota = new Rota();
         $rota->fill($request->all());
+
         if ($rota->save()) {
-            return Redirect::route('dashboard')->with('success', 'Rota criada com sucesso!');
+            foreach($request->corpo_envio_resposta as $corpo){
+                $corpo_data = CorpoEnvioResposta::findOrNew(isset($corpo['id']) ? $corpo['id'] : null);
+                $corpo_data->metodo_id = isset($corpo['metodo']['metodo']) ? Metodo::where('metodo', $corpo['metodo']['metodo'])->first()->id : Metodo::where('metodo', 'GET')->first()->id;
+                $corpo_data->corpo_json = $corpo['corpo_json'];
+                $corpo_data->save();
+                $rota->corpoEnvioResposta()->attach($corpo_data);
+            }
+            return Redirect::route("dashboard", $rota->projeto_id)->with('success', 'Rota criada com sucesso!');
         }
 
         return Inertia::render('Dashboard/Index', [
             'auth' => $request->user(),
-            'rotas' => Rota::getAllRotas(6),
+            'rotas' => Rota::getAllRotas($rota->projeto_id),
         ]);
     }
 
@@ -56,14 +70,37 @@ class RotasController extends Controller
         }
 
         $rota->fill($request->all());
+        foreach($request->corpo_envio_resposta as $corpo){
+            $corpo_data = CorpoEnvioResposta::findOrNew(isset($corpo['id']) ? $corpo['id'] : null);
+            $corpo_data->metodo_id = isset($corpo['metodo']['metodo']) ? Metodo::where('metodo', $corpo['metodo']['metodo'])->first()->id : Metodo::where('metodo', 'GET')->first()->id;
+            $corpo_data->corpo_json = $corpo['corpo_json'];
+            $corpo_data->save();
+            $rota->corpoEnvioResposta()->attach($corpo_data);
+        }
 
-        if ($rota->update()) {
-            return Redirect::route('dashboard')->with('success', 'Rota atualizada com sucesso!');
+        $rota->rotaParametros()->delete();
+
+        foreach ($request->rota_parametros as $parametro) {
+            $parametro_data = RotaParametro::findOrNew(isset($parametro['id']) ? $parametro['id'] : null);
+            $parametro_data->rota_id = $rota->id;
+            $parametro_data->parametro = $parametro['parametro'];
+            $parametro_data->descricao = $parametro['descricao'];
+            $parametro_data->exemplo = $parametro['exemplo'];
+            $parametro_data->save();
+        }
+
+        if(!isset($request->autenticacao['id']) && !empty($request->autenticacao)){
+            Autenticacao::create($request->autenticacao);
+            $rota->autenticacao_id = $request->autenticacao['id'];
+        }
+
+        if ($rota->save()) {
+            return Redirect::route("dashboard", $rota->projeto_id)->with('success', 'Rota atualizada com sucesso!');
         }
 
         return Inertia::render('Dashboard/Index', [
             'auth' => $request->user(),
-            'rotas' => Rota::getAllRotas(6),
+            'rotas' => Rota::getAllRotas($rota->projeto_id),
         ]);
     }
 
@@ -80,13 +117,30 @@ class RotasController extends Controller
         $rota = new Rota();
         $rota = Rota::findOrFail($id);
 
+        foreach($rota->corpoEnvioResposta as $corpo){
+            $corpo->delete();
+        }
+
         if ($rota->delete()) {
-            return Redirect::route('dashboard')->with('success', 'Rota excluída com sucesso!');
+            return Redirect::route("dashboard", $rota->projeto_id)->with('success', 'Rota excluída com sucesso!');
         }
 
         return Inertia::render('Dashboard/Index', [
             'auth' => auth()->user(),
-            'rotas' => Rota::getAllRotas(6),
+            'rotas' => Rota::getAllRotas($rota->projeto_id),
+        ]);
+    }
+
+    public function atualizarPosicoes(Request $request, Rota $rota): RedirectResponse
+    {
+        $rota->posicao_x = request('posicao_x');
+        $rota->posicao_y = request('posicao_y');
+        $rota->save();
+
+        return Redirect::route('dashboard', [
+            'auth' => $request->user(),
+            'rotas' => Rota::getAllRotas($rota->projeto_id),
+            'projeto_id' => $rota->projeto_id,
         ]);
     }
 }

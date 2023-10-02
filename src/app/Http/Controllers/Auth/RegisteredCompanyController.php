@@ -5,20 +5,33 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\Usuario;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class RegisteredCompanyController extends Controller
 {
+
+    /**
+     * Display the registration view.
+     */
+    public function create(): InertiaResponse
+    {
+        return Inertia::render('Auth/CadastroEmpresa');
+    }
+
     /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'nome' => ['required', 'string', 'max:255'],
@@ -28,6 +41,7 @@ class RegisteredCompanyController extends Controller
             'empresa_email' => ['required', 'string', 'email', 'max:14', 'unique:usuarios,email', 'unique:empresas,email'],
             'cnpj' => ['required', 'string', 'max:255', 'unique:empresas,cnpj'],
         ]);
+
         $empresa = new Empresa();
         $empresa = $empresa->createNewEmpresa($request);
 
@@ -47,6 +61,6 @@ class RegisteredCompanyController extends Controller
 
         Auth::login($user);
 
-        return response()->noContent();
+        return redirect(RouteServiceProvider::HOME);
     }
 }

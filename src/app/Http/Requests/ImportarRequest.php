@@ -2,17 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Empresa;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjetoUpdateRequest extends FormRequest
+class ImportarRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->check() && Empresa::find(auth()->user()->empresa_id)->id === auth()->user()->empresa_id;
+        return auth()->user() != null;
     }
 
     /**
@@ -23,9 +22,7 @@ class ProjetoUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => 'required|string',
-            'limite_usuarios' => 'required|numeric',
-            'url_padrao' => 'required|string',
+            'arquivo' => 'required|file|mimes:json,yml,yaml',
         ];
     }
 }

@@ -13,8 +13,6 @@ class Projeto extends Model
 
     protected $fillable = ['titulo', 'limite_usuarios', 'url_padrao', 'empresa_id'];
 
-    protected $searchableFields = ['*'];
-
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);
@@ -28,5 +26,10 @@ class Projeto extends Model
     public function usuarios()
     {
         return $this->belongsToMany(Usuario::class, 'usuario_projetos');
+    }
+
+    public function autenticacoes()
+    {
+        return $this->hasMany(Autenticacao::class);
     }
 }

@@ -11,16 +11,15 @@ class CorpoEnvioResposta extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['metodo_id'];
+    protected $fillable = ['metodo_id', 'corpo_json', 'codigo_http', 'tipo_resposta'];
 
     protected $searchableFields = ['*'];
 
-    protected $table = 'corpo_envio_respostas';
+    protected $casts = [
+        'corpo_json' => 'array',
+    ];
 
-    public function autenticacao()
-    {
-        return $this->hasOne(Autenticacao::class);
-    }
+    protected $table = 'corpo_envio_respostas';
 
     public function metodo()
     {
@@ -30,5 +29,10 @@ class CorpoEnvioResposta extends Model
     public function testes()
     {
         return $this->hasMany(Teste::class);
+    }
+
+    public function rota()
+    {
+        return $this->belongsToMany(Rota::class, 'rota_corpo', 'corpo_id', 'rota_id');
     }
 }

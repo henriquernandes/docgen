@@ -27,7 +27,8 @@ class Empresa extends Model
         return $this->hasMany(Projeto::class, 'empresa_id', 'id');
     }
 
-    public static function createNewEmpresa($request){
+    public static function createNewEmpresa($request)
+    {
         $empresa = Empresa::create([
             'nome' => $request->empresa_nome,
             'email' => $request->empresa_email,
@@ -36,7 +37,8 @@ class Empresa extends Model
         return $empresa;
     }
 
-    public static function createNewEmpresaFromNewUsario($request){
+    public static function createNewEmpresaFromNewUsario($request)
+    {
         $empresa = Empresa::create([
             'nome' => $request->nome,
             'email' => $request->email,

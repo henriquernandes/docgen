@@ -2,17 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Empresa;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjetoUpdateRequest extends FormRequest
+class UpdateRotasPosicao extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->check() && Empresa::find(auth()->user()->empresa_id)->id === auth()->user()->empresa_id;
+        return auth()->check();
     }
 
     /**
@@ -23,9 +22,8 @@ class ProjetoUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => 'required|string',
-            'limite_usuarios' => 'required|numeric',
-            'url_padrao' => 'required|string',
+            'posicao_x' => 'required',
+            'posicao_y' => 'required',
         ];
     }
 }

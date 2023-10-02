@@ -11,14 +11,16 @@ export default function Index({auth, projetos}) {
     const [isCriarModalOpen, setCriarModalOpen] = useState(false);
     const projetoRef = useRef(null)
 
-
     return (
         <AuthenticatedLayout user={auth}>
             <Head title="Projetos"/>
             <div className="flex flex-col items-center h-screen">
-                <button className="m-4 px-4 py-2 hover:bg-green-800 bg-green-600  text-white rounded"
-                        onClick={() => setCriarModalOpen(true)}>Criar Projeto
-                </button>
+                {
+                    auth.id === auth.empresa.usuario_id &&
+                    <button className="m-4 px-4 py-2 hover:bg-green-800 bg-green-600  text-white rounded"
+                            onClick={() => setCriarModalOpen(true)}>Criar Projeto
+                    </button>
+                }
                 { projetos.length === 0 ? (
                     <div className="text-center mt-6 text-xl text-gray-600">
                         Não existem projetos cadastrados.
@@ -50,18 +52,24 @@ export default function Index({auth, projetos}) {
                                         <td className="py-2 px-4 border">{projeto.titulo}</td>
                                         <td className="py-2 px-4 border">{projeto.url_padrao}</td>
                                         <td className="py-2 px-4 border-b flex space-x-1">
+                                            { auth.id === auth.empresa.usuario_id && (
+                                                <>
+                                                    <button
+                                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-800 text-white rounded"
+                                                        onClick={() => {
+                                                            projetoRef.current = projeto
+                                                            setEditarModalOpen(true);
+                                                        }}>Editar
+                                                    </button>
+                                                    <button className="px-4 py-2 bg-red-700 hover:bg-red-900 text-white rounded"
+                                                            onClick={handleDelete}>Excluir
+                                                    </button>
+                                                </>
+                                            )}
                                             <button
-                                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-800 text-white rounded"
-                                                onClick={() => {
-                                                    projetoRef.current = projeto
-                                                    setEditarModalOpen(true);
-                                                }}>Editar
-                                            </button>
-                                            <button className="px-4 py-2 bg-red-700 hover:bg-red-900 text-white rounded"
-                                                    onClick={handleDelete}>Excluir
-                                            </button>
-                                            <button
-                                                className="px-4 py-2 hover:bg-sky-700 bg-sky-500 text-white rounded">Acessar
+                                                className="px-4 py-2 hover:bg-sky-700 bg-sky-500 text-white rounded"
+                                                onClick={() => router.visit(`dashboard/${projeto.id}`)}
+                                                >Acessar
                                             </button>
                                             <button
                                                 className="px-4 py-2 hover:bg-purple-700 bg-purple-500 text-white rounded">Testar

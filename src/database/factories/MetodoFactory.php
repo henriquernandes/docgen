@@ -15,6 +15,16 @@ class MetodoFactory extends Factory
      */
     protected $model = Metodo::class;
 
+    protected $metodos = [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+        'OPTIONS',
+        'HEAD',
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -23,7 +33,7 @@ class MetodoFactory extends Factory
     public function definition(): array
     {
         return [
-            'corpo_json' => [],
+            'metodo' => $this->faker->randomElement($this->metodos),
         ];
     }
 }
