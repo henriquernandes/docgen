@@ -24,6 +24,7 @@ class CorpoEnvioRespostaFactory extends Factory
     {
         return [
             'metodo_id' => \App\Models\Metodo::factory(),
+            'corpo_json' => json_encode(['test' => 'test']),
         ];
     }
 }

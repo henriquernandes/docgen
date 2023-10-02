@@ -60,8 +60,7 @@ class ProjectsController extends Controller
         }
 
         return Inertia::render('Projetos/Index', [
-            'auth' => $request->user(),
-            'rotas' => Rota::getAllRotas(6),
+            'auth' => $request->user()
         ]);
     }
 
@@ -78,8 +77,7 @@ class ProjectsController extends Controller
         }
 
         return Inertia::render('Projetos/Index', [
-            'auth' => $request->user(),
-            'rotas' => Rota::getAllRotas(6),
+            'auth' => $request->user()
         ]);
     }
 }

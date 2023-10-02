@@ -12,8 +12,7 @@ return new class extends Migration {
     {
         Schema::create('metodos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->json('corpo_json');
-
+            $table->string('metodo');
             $table->timestamps();
         });
     }

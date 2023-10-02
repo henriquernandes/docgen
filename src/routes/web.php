@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\ImportacaoController;
 use App\Http\Controllers\EquipesController;
+use App\Http\Controllers\ExportacaoController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\RotasController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,10 +28,14 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('dashboard', [RotasController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/{projeto_id}', [RotasController::class, 'index'])->name('dashboard');
     Route::post('rotas', [RotasController::class, 'store'])->name('rotas.store');
     Route::put('rotas/{id}', [RotasController::class, 'update'])->name('rotas.update');
     Route::delete('rotas/{id}', [RotasController::class, 'destroy'])->name('rotas.destroy');
+    Route::put('rotas/{rota}/posicao', [RotasController::class, 'atualizarPosicoes'])->name('rotas.atualizarPosicoes');
+
+    Route::post('importar/{projeto_id}', [ImportacaoController::class, 'importar'])->name('rotas.importar');
+    Route::get('exportar/{projeto_id}', [ExportacaoController::class, 'exportar'])->name('rotas.exportar');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -12,8 +12,9 @@ class ProjetoPostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && 
-                Empresa::find(auth()->user()->empresa_id)->usuario_id === auth()->user()->id;
+
+        return auth()->check() &&
+                Empresa::find(auth()->user()->empresa_id)->id === auth()->user()->empresa_id;
     }
 
     /**

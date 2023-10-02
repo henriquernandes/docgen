@@ -8,7 +8,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: "",
+        nome: "",
         email: "",
         password: "",
         password_confirmation: "",
@@ -23,29 +23,28 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("register"));
+        post(route("cadastro"));
     };
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title="Cadastro" />
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="nome" value="Nome" />
 
                     <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
+                        id="nome"
+                        name="nome"
+                        value={data.nome}
                         className="mt-1 block w-full"
-                        autoComplete="name"
+                        autoComplete="nome"
                         isFocused={true}
-                        onChange={(e) => setData("name", e.target.value)}
+                        onChange={(e) => setData("nome", e.target.value)}
                         required
                     />
-
-                    <InputError message={errors.name} className="mt-2" />
+                    <InputError message={errors.nome} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -66,7 +65,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Senha" />
 
                     <TextInput
                         id="password"
@@ -85,7 +84,7 @@ export default function Register() {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value="Confirmar Senha"
                     />
 
                     <TextInput

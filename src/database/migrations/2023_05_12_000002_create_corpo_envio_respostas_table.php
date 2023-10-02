@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('corpo_envio_respostas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('metodo_id');
+            $table->json('corpo_json');
 
             $table->timestamps();
         });

@@ -7,13 +7,26 @@ use Illuminate\Database\Seeder;
 
 class MetodoSeeder extends Seeder
 {
+
+    protected $metodos = [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'options',
+        'head',
+    ];
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Metodo::factory()
-            ->count(5)
-            ->create();
+        foreach ($this->metodos as $metodo) {
+            Metodo::factory()->create([
+                'metodo' => $metodo,
+            ]);
+        }
     }
 }

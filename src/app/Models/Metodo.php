@@ -15,10 +15,6 @@ class Metodo extends Model
 
     protected $searchableFields = ['*'];
 
-    protected $casts = [
-        'corpo_json' => 'array',
-    ];
-
     public function corpoEnvioRespostas()
     {
         return $this->hasMany(CorpoEnvioResposta::class);
