@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ImportacaoController extends Controller
 {
-    public function importar(ImportarRequest $request, $projeto_id)
+    public function importar(Request $request, $projeto_id)
     {
         if (empty($request->file('arquivo'))) {
             return redirect()->back()->with('error', 'Arquivo não enviado');

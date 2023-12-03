@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 
@@ -18,8 +19,9 @@ class UsuarioSeeder extends Seeder
             'password' => bcrypt('docgen'),
         ])->create();
 
-        Usuario::factory()
-            ->count(5)
-            ->create();
+        $empresa = Empresa::first();
+        $empresa->usuario_id = Usuario::first()->id;
+        $empresa->save();
+
     }
 }

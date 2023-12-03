@@ -39,7 +39,7 @@ const CriarModal = ({ isOpen , onClose }) => {
         toast.success('Projeto Criado com sucesso!');
         onClose();
     };
-    
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
             <div className="bg-white w-1/3 p-10 rounded-lg">
@@ -48,10 +48,6 @@ const CriarModal = ({ isOpen , onClose }) => {
                     <div className="mb-4">
                         <label htmlFor="titulo" className="block text-gray-800 font-bold mb-2">Titulo</label>
                         <input type="text" id="titulo" value={data.titulo} name="titulo" className="w-full border border-gray-300 p-2 rounded-lg" onChange={handleChange} required />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="limite" className="block text-gray-800 font-bold mb-2">Limite Usuarios</label>
-                        <input type="number" min="1" id="limite_usuarios" value={data.limite_usuarios} name="limite_usuarios" className="w-full border border-gray-300 p-2 rounded-lg" onChange={handleChange} required />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="url" className="block text-gray-800 font-bold mb-2">URL</label>

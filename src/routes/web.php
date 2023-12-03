@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::post('projetos', [ProjectsController::class, 'store'])->name('projetos.store');
     Route::put('projetos/{id}', [ProjectsController::class, 'update'])->name('projetos.update');
 
+    Route::post('testes/{projeto_id}', [RotasController::class, 'testes'])->name('rotas.testes');
+
     Route::get('logs', [LogsController::class, 'index'])->name('logs.index');
 });
 

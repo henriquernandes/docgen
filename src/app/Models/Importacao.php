@@ -15,7 +15,7 @@ class Importacao extends Model
         if (isset($data['paths'])) {
             foreach ($data['paths'] as $nome_rota => $metodos) {
                 foreach ($metodos as $metodo => $informacoes_rota) {
-                    $metodo_id = Metodo::where('metodo', 'like', $metodo)->first()->id;
+                    $metodo_id = Metodo::whereRaw('lower(metodo) ILIKE lower(?)', [$metodo])->first()->id;
                     $temp_id = uniqid();
 
                     $parametros = [];
@@ -56,7 +56,18 @@ class Importacao extends Model
                                 'corpo_json' => isset($obj) ? $obj : "{}",
                             ];
                         }
-                    } else {
+                    }
+
+                    if(isset($informacoes_rota['requestBody'])) {
+                        $requestBody = $informacoes_rota['requestBody'];
+                        if(isset($requestBody['content']['application/json']['schema']['$ref'])) {
+                            $ref = self::formatDefinitionToArray($requestBody['content']['application/json']['schema']['$ref']);
+                            $corpo_openapi = $data;
+                            foreach ($ref as $key_ref) {
+                                $corpo_openapi = $corpo_openapi[$key_ref];
+                            }
+                            $obj = json_encode(self::mountJsonObject($corpo_openapi));
+                        }
                         $rota_corpo[] = [
                             'metodo_id' => $metodo_id,
                             'temp_rota_id' => $temp_id,
@@ -68,8 +79,8 @@ class Importacao extends Model
                     $respostas = [];
                     if (isset($informacoes_rota['responses'])) {
                         foreach ($informacoes_rota['responses'] as $key => $value) {
-                            if (isset($value['schema']['$ref'])) {
-                                $ref = self::formatDefinitionToArray($value['schema']['$ref']);
+                            if(isset($requestBody['content']['application/json']['schema']['$ref'])) {
+                                $ref = self::formatDefinitionToArray($requestBody['content']['application/json']['schema']['$ref']);
                                 $corpo_openapi = $data;
                                 foreach ($ref as $key_ref) {
                                     $corpo_openapi = $corpo_openapi[$key_ref];
@@ -104,8 +115,8 @@ class Importacao extends Model
             }
         }
 
-        if (isset($data['securityDefinitions'])) {
-            foreach ($data['securityDefinitions'] as $key => $value) {
+        if (isset($data['components']['securitySchemes'])) {
+            foreach ($data['components']['securitySchemes'] as $key => $value) {
                 $array_formatado['autenticacao'][] = [
                     'nome' => $key,
                     'tipo_autenticacao' => isset($value['type']) ? $value['type'] : '',
@@ -140,6 +151,7 @@ class Importacao extends Model
             $rotas['posicao_x'] = $padLeft;
             $rotas['posicao_y'] = $padTop;
             $rotas['projeto_id'] = $projeto_id;
+
 
             if (isset($rotas['autenticacao'])) {
                 foreach ($array_formatado['autenticacao'] as $auth) {
@@ -176,6 +188,14 @@ class Importacao extends Model
                         $rota->corpoEnvioResposta()->attach($corpo);
                     }
                 }
+            }else {
+                $corpo = CorpoEnvioResposta::create([
+                    'metodo_id' => $rotas['metodo'],
+                    'rota_id' => $rota->id,
+                    'tipo_resposta' => false,
+                    'corpo_json' => '{}',
+                ]);
+                $rota->corpoEnvioResposta()->attach($corpo);
             }
 
             if (!empty($rotas['rota_resposta'])) {

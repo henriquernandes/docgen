@@ -15,7 +15,7 @@ return new class extends Migration
             $table->dropColumn('corpo_envio_resposta_id');
             $table->string('local_envio')->nullable();
             $table->string('chave')->nullable();
-            $table->foreignId('projeto_id')->constrained('projetos');
+            $table->foreignId('projeto_id')->constrained('projetos')->onDelete('cascade');
             $table->string('exemplo')->nullable();
         });
     }

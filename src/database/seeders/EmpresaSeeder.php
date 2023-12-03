@@ -12,8 +12,13 @@ class EmpresaSeeder extends Seeder
      */
     public function run(): void
     {
-        Empresa::factory()
-            ->count(5)
-            ->create();
+        Empresa::factory()->state([
+            'nome' => 'Docgen',
+            'email' => 'docgen@docgen.com',
+        ])->create();
+
+        // Empresa::factory()
+        //     ->count(5)
+        //     ->create();
     }
 }
