@@ -44,11 +44,16 @@ class Rota extends Model
 
     public function projeto()
     {
-        return $this->belongsToMany(Projeto::class, 'usuario_projetos');
+        return $this->belongsTo(Projeto::class);
     }
 
     public function corpoEnvioResposta()
     {
         return $this->belongsToMany(CorpoEnvioResposta::class, 'rota_corpo', 'rota_id', 'corpo_id');
+    }
+
+    public function testes()
+    {
+        return $this->hasMany(Teste::class);
     }
 }

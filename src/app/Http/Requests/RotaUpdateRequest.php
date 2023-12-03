@@ -24,7 +24,7 @@ class RotaUpdateRequest extends FormRequest
         return [
             'rota' => 'required|string|max:255',
             'titulo' => 'required|string|max:255',
-            'descricao' => 'required|string|max:255',
+            'descricao' => 'nullable|string|max:255',
             'projeto_id' => 'required|integer|exists:projetos,id',
             'rota_id' => 'nullable|integer|exists:rotas,id'
         ];

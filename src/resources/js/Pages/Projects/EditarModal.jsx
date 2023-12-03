@@ -11,7 +11,6 @@ const EditarModal = ({isOpen, onClose, projeto}) => {
     } = useForm({
         titulo: "",
         url_padrao: "",
-        limite_usuarios: 1,
     });
 
     const handleChange = (props) => {
@@ -29,7 +28,6 @@ const EditarModal = ({isOpen, onClose, projeto}) => {
         e.preventDefault();
         router.put(`/projetos/${data.id}` , {
             titulo: data.titulo,
-            limite_usuarios: data.limite_usuarios,
             url_padrao: data.url_padrao,
         });
 
@@ -52,10 +50,6 @@ const EditarModal = ({isOpen, onClose, projeto}) => {
                         <label htmlFor="id" className="block text-gray-800 font-bold mb-2">ID</label>
                         <input type="text" value={data.id} id="id" name="id" className="w-full bg-slate-100 border border-gray-300 p-2 rounded-lg"
                             readOnly required/>
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="limite_usuarios" className="block text-gray-800 font-bold mb-2">Limite Usuários</label>
-                        <input type="text" value={data.limite_usuarios} onChange={handleChange} id="limite_usuarios" name="limite_usuarios" className="w-full border border-gray-300 p-2 rounded-lg" required/>
                     </div>
                     <div className="mb-4">
                         <label htmlFor="titulo" className="block text-gray-800 font-bold mb-2">Titulo</label>

@@ -13,7 +13,7 @@ class Exportacao extends Model
     {
         $rotas = Rota::getAllRotas($projeto_id, true);
         $autenticacoes = Autenticacao::where('projeto_id', $projeto_id)->get();
-        $projeto = Projeto::find($projeto_id)->first();
+        $projeto = Projeto::where('id', $projeto_id)->first();
 
         $data = [
             'openapi' => '3.0.0',
@@ -60,14 +60,14 @@ class Exportacao extends Model
             }
 
             $response = [];
-            $responseItems = $rota->corpoEnvioResposta()->where('tipo_resposta', true)->get();
+            $responseItems = $rota->corpoEnvioResposta()->where('tipo_resposta')->get();
             if ($responseItems) {
                 foreach ($responseItems as $res) {
                     $responseBody = [
                         'description' => $res->codigo_http,
                         'content' => [
                             'application/json' => [
-                                'schema' => self::generateSchema(json_decode($res->corpo_json)),
+                                'schema' => self::generateSchema(json_decode($res->corpo_json, true)),
                             ]
                         ]
                     ];
@@ -93,8 +93,11 @@ class Exportacao extends Model
                 'parameters' => $parameters,
                 'requestBody' => $requestBody,
                 'responses' => $response,
-                'security' => $security
             ];
+
+            if ($security !== null) {
+                $data['paths'][$nome_rota][$metodo]['security'] = $security;
+            }
         }
 
         foreach ($autenticacoes as $autenticacao) {
@@ -152,6 +155,13 @@ class Exportacao extends Model
         } else {
             $schema = [
                 'type' => $type
+            ];
+        }
+
+        if (!is_array($schema)) {
+            $schema = [
+                'type' => 'string',
+                'example' => $schema
             ];
         }
 
