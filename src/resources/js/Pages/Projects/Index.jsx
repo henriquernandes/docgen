@@ -29,7 +29,6 @@ export default function Index({auth, projetos}) {
                     <table className="w-full border-collapse bg-white border border-gray-300 rounded-lg">
                         <thead className="bg-gray-200">
                         <tr>
-                            <th className="px-6 py-4 w-2">Limite Usuários</th>
                             <th className="px-6 py-4">Titulo</th>
                             <th className="px-6 py-4">URL</th>
                             <th className="px-6 py-4 w-24">Ação</th>
@@ -48,7 +47,6 @@ export default function Index({auth, projetos}) {
 
                                 return (
                                     <tr key={projeto.id}>
-                                        <td className="py-2 px-4 border">{projeto.limite_usuarios}</td>
                                         <td className="py-2 px-4 border">{projeto.titulo}</td>
                                         <td className="py-2 px-4 border">{projeto.url_padrao}</td>
                                         <td className="py-2 px-4 border-b flex space-x-1">
@@ -72,6 +70,7 @@ export default function Index({auth, projetos}) {
                                                 >Acessar
                                             </button>
                                             <button
+                                            onClick={() => router.visit(`testes/${projeto.id}`, { method: 'post' })}
                                                 className="px-4 py-2 hover:bg-purple-700 bg-purple-500 text-white rounded">Testar
                                             </button>
                                         </td>

@@ -76,7 +76,6 @@ export default function Register() {
                         className="mt-1 block w-full"
                         autoComplete="email_empresa"
                         onChange={(e) => setData("email_empresa", e.target.value)}
-                        required
                     />
 
                     <InputError message={errors.email} className="mt-2" />

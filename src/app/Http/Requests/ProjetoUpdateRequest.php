@@ -24,7 +24,6 @@ class ProjetoUpdateRequest extends FormRequest
     {
         return [
             'titulo' => 'required|string',
-            'limite_usuarios' => 'required|numeric',
             'url_padrao' => 'required|string',
         ];
     }

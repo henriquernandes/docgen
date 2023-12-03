@@ -29,7 +29,10 @@ class UsuarioFactory extends Factory
             'password' => \Hash::make('password'),
             'remember_token' => Str::random(10),
             'matricula' => $this->faker->text(255),
-            'empresa_id' => \App\Models\Empresa::factory(),
+            'empresa_id' => \App\Models\Empresa::factory()->state([
+                'nome' => 'Docgen',
+                'email' => 'docgen@docgen.com',
+            ]),
         ];
     }
 

@@ -15,7 +15,6 @@ function ImportSection({projeto_id}) {
 
     const handleExport = (e) => {
         e.preventDefault();
-        // router.get(`/exportar/${projeto_id}`);
         window.open(`/exportar/${projeto_id}`)
     };
 
@@ -43,7 +42,7 @@ function ImportSection({projeto_id}) {
                 <DangerButton
                     onClick={handleExport}
                 >
-                    Exportar
+                    Gerar
                 </DangerButton>
             </div>
         </div>

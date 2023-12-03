@@ -21,7 +21,7 @@ import DangerButton from "@/Components/DangerButton";
 import SuccessButton from "@/Components/SuccessButton";
 import PurpleButton from "@/Components/PurpleButton";
 
-export default function Dashboard({ auth, rotas, projeto_id, user_info, autenticacoes }) {
+export default function Dashboard({ auth, rotas, projeto_id, metodos, autenticacoes }) {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [selectedNode, setSelectedNode] = useState(null);
@@ -97,37 +97,43 @@ export default function Dashboard({ auth, rotas, projeto_id, user_info, autentic
         const {
             target: { value },
         } = data;
+
+        let newData = selectedNode;
         if(index !== undefined){
             if(prop === "corpo_envio_resposta"){
-            setSelectedNode({
-                ...selectedNode,
-                data: {
-                    ...selectedNode.data,
+                newData.data = {
+                    ...newData.data,
                     corpo_envio_resposta: [
                         {
-                            ...selectedNode.data.corpo_envio_resposta[index],
+                            ...newData.data.corpo_envio_resposta[index],
                             corpo_json: value,
                         },
                     ],
-                },
-            });
+                };
 
-            setData({
-                ...selectedNode.data,
-            });
-            return;
+                setSelectedNode({
+                    ...newData,
+                });
+
+                setData({
+                    ...newData.data,
+                });
+
+                return;
+            }
         }
-    }
+
+        newData.data = {
+            ...newData.data,
+            [prop]: value,
+        };
+
         setSelectedNode({
-            ...selectedNode,
-            data: {
-                ...selectedNode.data,
-                [prop]: value,
-            },
+            ...newData,
         });
 
         setData({
-            ...selectedNode.data,
+            ...newData.data,
         });
     };
 
@@ -150,35 +156,38 @@ export default function Dashboard({ auth, rotas, projeto_id, user_info, autentic
 
     };
 
-
     const handleChangeMetodo = (data, index) => {
-        const { value, label } = data;
+        const { metodo, id } = data;
 
-        setSelectedNode({
+        const newData = {
+            ...selectedNode,
             data: {
                 ...selectedNode.data,
-                corpo_envio_resposta: selectedNode.data.corpo_envio_resposta.length ? selectedNode.data.corpo_envio_resposta.map((item, i) => {
+                corpo_envio_resposta:  selectedNode.data.corpo_envio_resposta.length != 0 ? selectedNode.data.corpo_envio_resposta.map((item, i) => {
                     if(index === i){
                         return {
                             ...item,
+                            metodo_id: id,
                             metodo: {
-                                metodo: value,
-                                descricao: label,
+                                ...item.metodo,
+                                id: id,
+                                metodo: metodo,
                             },
                         };
                     }
-                }) :[{
+                }) : [{
+                    corpo_json: "{}",
+                    metodo_id: id,
                     metodo: {
-                        metodo: value,
-                        descricao: label,
-                    },
+                        id: id,
+                        metodo: metodo,
+                    }
                 }],
             },
-        });
+        }
 
-        setData({
-            ...selectedNode.data,
-        });
+        setSelectedNode({...newData});
+        setData({...newData.data});
     };
 
 
@@ -187,27 +196,33 @@ export default function Dashboard({ auth, rotas, projeto_id, user_info, autentic
             target: { value },
         } = data;
 
+        let newData = selectedNode;
+
+        newData.data = {
+            ...newData.data,
+            rota_parametros: newData.data.rota_parametros.map((item, i) => {
+                if (i === index) {
+                    return {
+                        ...item,
+                        [prop]: value,
+                    };
+                }
+                return item;
+            }),
+        };
+
         setSelectedNode({
-            data: {
-                ...selectedNode.data,
-                rota_parametros: selectedNode.data.rota_parametros.map((item, i) => {
-                    if (i === index) {
-                        return {
-                            ...item,
-                            [prop]: value,
-                        };
-                    }
-                    return item;
-                }),
-            },
+            ...newData,
         });
 
         setData({
-            ...selectedNode.data,
+            ...newData.data,
         });
     };
 
     const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(data);
         router.put(`/rotas/${data.id}`, {
             ...data,
             titulo: data.label,
@@ -404,8 +419,8 @@ export default function Dashboard({ auth, rotas, projeto_id, user_info, autentic
                         <input
                             className="border border-gray-300 rounded-md w-full"
                             type="text"
-                            value={selectedNode?.data?.label || ""}
-                            onChange={(e) => handleChange(e, "label")}
+                            value={selectedNode?.data?.rota || ""}
+                            onChange={(e) => handleChange(e, "rota")}
                         />
                     </div>
                     <div>
@@ -430,27 +445,28 @@ export default function Dashboard({ auth, rotas, projeto_id, user_info, autentic
                     </div>
                     <div>
                         <span className="text-md">Metodo do corpo *</span>
-                        {console.log(selectedNode?.data)}
                         <Select
                             className="mt-5"
-                            options={defaultOptions}
+                            options={metodos}
                             required
-                            defaultOption={defaultOptions[0]}
-                            value={defaultOptions.find(item => item.value === selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo.toLowerCase())}
+                            defaultOption={metodos[0]}
+                            getOptionValue={(option) => option.id}
+                            getOptionLabel={(option) => option.metodo}
+                            value={metodos.find(item => item.metodo === selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo)}
                             onChange={(e) => handleChangeMetodo(e, 0)}
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
                                     position: 'relative',
                                     paddingLeft: '1.5em',
-                                    color: methodColors(selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo.toLowerCase()).background,
+                                    color: methodColors(selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo).background,
                                     '::before': {
                                         content: '"\\2022"',
                                         position: 'absolute',
                                         left: '0.2em',
                                         top: '1',
                                         fontSize: '2em',
-                                        color: methodColors(selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo.toLowerCase()).background,
+                                        color: methodColors(selectedNode?.data?.corpo_envio_resposta[0]?.metodo?.metodo).background,
                                     },
                                 }),
                             }}

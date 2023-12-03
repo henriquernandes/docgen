@@ -21,8 +21,9 @@ class Rota extends Model
         $routes = self::where('projeto_id', $projeto_id)->with([
             'corpoEnvioResposta' => function ($query) use ($withResponse) {
                 if ($withResponse) {
-                    $query->where('tipo_resposta', true);
-                } else {
+                    $query->where('tipo_resposta', true)
+                        ->orWhere('tipo_resposta', false);
+                }else {
                     $query->where('tipo_resposta', false);
                 }
             },
@@ -44,11 +45,16 @@ class Rota extends Model
 
     public function projeto()
     {
-        return $this->belongsToMany(Projeto::class, 'usuario_projetos');
+        return $this->belongsTo(Projeto::class);
     }
 
     public function corpoEnvioResposta()
     {
         return $this->belongsToMany(CorpoEnvioResposta::class, 'rota_corpo', 'rota_id', 'corpo_id');
+    }
+
+    public function testes()
+    {
+        return $this->hasMany(Teste::class);
     }
 }

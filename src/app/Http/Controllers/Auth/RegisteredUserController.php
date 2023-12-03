@@ -46,6 +46,17 @@ class RegisteredUserController extends Controller
             'empresa_id' => $request->email_empresa ? Empresa::where('email', $request->email_empresa)->first()->id : null,
         ]);
 
+        if(empty($request->email_empresa)){
+            $empresa = Empresa::create([
+                'nome' => $request->nome,
+                'email' => $request->email,
+                'usuario_id' => $user->id,
+            ]);
+
+            $user->empresa_id = $empresa->id;
+            $user->save();
+        }
+
         event(new Registered($user));
 
         Auth::login($user);

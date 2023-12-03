@@ -11,7 +11,7 @@ class Empresa extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nome', 'email'];
+    protected $fillable = ['nome', 'email', 'usuario_id'];
 
     protected $searchableFields = ['*'];
 

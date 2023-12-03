@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rotas', function (Blueprint $table) {
-            $table->foreignId('autenticacao_id')->nullable()->constrained('autenticacoes')->onDelete('cascade');
+        Schema::table('projetos', function (Blueprint $table) {
+            $table->dropColumn('limite_usuarios');
         });
     }
 
@@ -21,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rotas', function (Blueprint $table) {
-            $table->dropForeign(['autenticacao_id']);
-            $table->dropColumn('autenticacao_id');
+        Schema::table('projetos', function (Blueprint $table) {
+            $table->integer('limite_usuarios')->nullable();
         });
     }
 };

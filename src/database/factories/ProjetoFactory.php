@@ -23,7 +23,6 @@ class ProjetoFactory extends Factory
     public function definition(): array
     {
         return [
-            'limite_usuarios' => $this->faker->randomNumber(),
             'url_padrao' => $this->faker->text(255),
             'empresa_id' => \App\Models\Empresa::factory(),
         ];

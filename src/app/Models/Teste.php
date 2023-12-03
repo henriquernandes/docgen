@@ -11,7 +11,7 @@ class Teste extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['corpo_envio_resposta_id', 'passou', 'retorno_erro'];
+    protected $fillable = ['corpo_envio_resposta_id', 'passou', 'retorno_erro', 'rota_id'];
 
     protected $searchableFields = ['*'];
 
@@ -27,5 +27,10 @@ class Teste extends Model
     public function allErros()
     {
         return $this->belongsToMany(Erros::class);
+    }
+
+    public function rota()
+    {
+        return $this->belongsTo(Rota::class);
     }
 }

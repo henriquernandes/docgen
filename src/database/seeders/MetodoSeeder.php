@@ -9,13 +9,13 @@ class MetodoSeeder extends Seeder
 {
 
     protected $metodos = [
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete',
-        'options',
-        'head',
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+        'OPTIONS',
+        'HEAD',
     ];
 
     /**
@@ -24,7 +24,7 @@ class MetodoSeeder extends Seeder
     public function run(): void
     {
         foreach ($this->metodos as $metodo) {
-            Metodo::factory()->create([
+            Metodo::create([
                 'metodo' => $metodo,
             ]);
         }
