@@ -57,9 +57,9 @@ class Usuario extends Authenticatable
 
     public function whichCadastroShouldUse()
     {
-        if($this->empresa_id == null){
+        if ($this->empresa_id == null) {
             return self::createUsuarioSemEmpresa();
-        }else{
+        } else {
             return self::createUsuarioComEmpresa();
         }
     }
@@ -79,7 +79,8 @@ class Usuario extends Authenticatable
         return $usuario;
     }
 
-    public function createUsuarioComEmpresa(){
+    public function createUsuarioComEmpresa()
+    {
         var_dump($this);
         $usuario = Usuario::create([
             'nome' => $this->nome,
@@ -92,7 +93,8 @@ class Usuario extends Authenticatable
         return $usuario;
     }
 
-    public function getEmpresaAttribute() {
+    public function getEmpresaAttribute()
+    {
         return $this->empresa()->first();
     }
 }
