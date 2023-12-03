@@ -12,8 +12,8 @@ class AutenticacaoSeeder extends Seeder
      */
     public function run(): void
     {
-        Autenticacao::factory()
-            ->count(5)
-            ->create();
+        // Autenticacao::factory()
+        //     ->count(5)
+        //     ->create();
     }
 }
