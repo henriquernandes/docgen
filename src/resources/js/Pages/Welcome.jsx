@@ -9,6 +9,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     <div className="self-center">
                         <ApplicationLogo className="block h-20 w-auto" />
                     </div>
+                    <Head title="Inicio" />
                     <div
                         className="inline-flex rounded-md shadow-sm"
                         role="group"

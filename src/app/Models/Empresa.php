@@ -11,7 +11,7 @@ class Empresa extends Model
     use HasFactory;
     use Searchable;
 
-    protected $fillable = ['nome', 'email', 'cnpj'];
+    protected $fillable = ['nome', 'email'];
 
     protected $searchableFields = ['*'];
 
@@ -32,7 +32,6 @@ class Empresa extends Model
         $empresa = Empresa::create([
             'nome' => $request->empresa_nome,
             'email' => $request->empresa_email,
-            'cnpj' => $request->cnpj,
         ]);
         return $empresa;
     }
