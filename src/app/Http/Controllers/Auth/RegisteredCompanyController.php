@@ -38,8 +38,7 @@ class RegisteredCompanyController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:usuarios,email', 'unique:empresas,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'empresa_nome' => ['required', 'string', 'max:255'],
-            'empresa_email' => ['required', 'string', 'email', 'max:14', 'unique:usuarios,email', 'unique:empresas,email'],
-            'cnpj' => ['required', 'string', 'max:255', 'unique:empresas,cnpj'],
+            'empresa_email' => ['required', 'string', 'email', 'max:255', 'unique:usuarios,email', 'unique:empresas,email'],
         ]);
 
         $empresa = new Empresa();

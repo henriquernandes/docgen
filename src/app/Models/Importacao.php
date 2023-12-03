@@ -19,17 +19,19 @@ class Importacao extends Model
                     $temp_id = uniqid();
 
                     $parametros = [];
-                    foreach ($informacoes_rota['parameters'] as $parametro) {
-                        $parametros[] = [
-                            'parametro' => isset($parametro['name']) ? $parametro['name'] : '',
-                            'tipo' => isset($parametro['type']) ? $parametro['type'] : '',
-                            'descricao' =>  isset($parametro['description']) ? $parametro['description'] : '',
-                            'exemplo' => isset($parametro['type']) ? (!empty(self::mountJsonType($parametro['type'])) ?
-                                self::mountJsonType($parametro['type']) : 'Não informado') : 'Não informado',
-                        ];
+                    if (isset($informacoes_rota['parameters'])) {
+                        foreach ($informacoes_rota['parameters'] as $parametro) {
+                            $parametros[] = [
+                                'parametro' => isset($parametro['name']) ? $parametro['name'] : '',
+                                'tipo' => isset($parametro['type']) ? $parametro['type'] : '',
+                                'descricao' => isset($parametro['description']) ? $parametro['description'] : '',
+                                'exemplo' => isset($parametro['type']) ? (!empty(self::mountJsonType($parametro['type'])) ?
+                                    self::mountJsonType($parametro['type']) : 'Não informado') : 'Não informado',
+                            ];
+                        }
                     }
 
-                    if(isset($informacoes_rota['security'])){
+                    if (isset($informacoes_rota['security'])) {
                         $security = $informacoes_rota['security'][0];
                         $security = array_keys($security);
                         $security = $security[0];
@@ -37,12 +39,12 @@ class Importacao extends Model
                     }
 
                     $rota_corpo = [];
-                    if(!empty($informacoes_rota['parameters'])){
+                    if (!empty($informacoes_rota['parameters'])) {
                         foreach ($informacoes_rota['parameters'] as $parametro) {
-                            if(isset($parametro['schema']['$ref'])){
+                            if (isset($parametro['schema']['$ref'])) {
                                 $ref = self::formatDefinitionToArray($parametro['schema']['$ref']);
                                 $corpo_openapi = $data;
-                                foreach($ref as $key_ref){
+                                foreach ($ref as $key_ref) {
                                     $corpo_openapi = $corpo_openapi[$key_ref];
                                 }
                                 $obj = json_encode(self::mountJsonObject($corpo_openapi));
@@ -54,7 +56,7 @@ class Importacao extends Model
                                 'corpo_json' => isset($obj) ? $obj : "{}",
                             ];
                         }
-                    }else {
+                    } else {
                         $rota_corpo[] = [
                             'metodo_id' => $metodo_id,
                             'temp_rota_id' => $temp_id,
@@ -64,12 +66,12 @@ class Importacao extends Model
                     }
 
                     $respostas = [];
-                    if(isset($informacoes_rota['responses'])){
-                        foreach($informacoes_rota['responses'] as $key => $value){
-                            if(isset($value['schema']['$ref'])){
+                    if (isset($informacoes_rota['responses'])) {
+                        foreach ($informacoes_rota['responses'] as $key => $value) {
+                            if (isset($value['schema']['$ref'])) {
                                 $ref = self::formatDefinitionToArray($value['schema']['$ref']);
                                 $corpo_openapi = $data;
-                                foreach($ref as $key_ref){
+                                foreach ($ref as $key_ref) {
                                     $corpo_openapi = $corpo_openapi[$key_ref];
                                 }
                                 $obj = json_encode(self::mountJsonObject($corpo_openapi));
@@ -102,8 +104,8 @@ class Importacao extends Model
             }
         }
 
-        if(isset($data['securityDefinitions'])){
-            foreach($data['securityDefinitions'] as $key => $value){
+        if (isset($data['securityDefinitions'])) {
+            foreach ($data['securityDefinitions'] as $key => $value) {
                 $array_formatado['autenticacao'][] = [
                     'nome' => $key,
                     'tipo_autenticacao' => isset($value['type']) ? $value['type'] : '',
@@ -114,7 +116,7 @@ class Importacao extends Model
             }
         }
 
-        if(isset($array_formatado['autenticacao'])){
+        if (isset($array_formatado['autenticacao'])) {
             foreach ($array_formatado['autenticacao'] as &$autenticacao) {
                 $autenticacao['projeto_id'] = $projeto_id;
                 $auth = Autenticacao::create($autenticacao);
@@ -139,9 +141,9 @@ class Importacao extends Model
             $rotas['posicao_y'] = $padTop;
             $rotas['projeto_id'] = $projeto_id;
 
-            if(isset($rotas['autenticacao'])){
-                foreach($array_formatado['autenticacao'] as $auth) {
-                    if($auth['nome'] == $rotas['autenticacao']){
+            if (isset($rotas['autenticacao'])) {
+                foreach ($array_formatado['autenticacao'] as $auth) {
+                    if ($auth['nome'] == $rotas['autenticacao']) {
                         $rotas['autenticacao_id'] = $auth['id'];
                     }
                 }
@@ -156,15 +158,15 @@ class Importacao extends Model
                 RotaParametro::create($parametro);
             }
 
-            if(!empty($rotas['rota_corpo'])){
-                foreach($rotas['rota_corpo'] as $corpo){
-                    if($corpo['temp_rota_id'] == $rotas['temp_id'] && !empty($corpo['corpo_json'])){
+            if (!empty($rotas['rota_corpo'])) {
+                foreach ($rotas['rota_corpo'] as $corpo) {
+                    if ($corpo['temp_rota_id'] == $rotas['temp_id'] && !empty($corpo['corpo_json'])) {
                         $corpo['rota_id'] = $rota->id;
                         $corpo['metodo_id'] = $rotas['metodo'];
                         $corpo['tipo_resposta'] = false;
                         $corpo = CorpoEnvioResposta::create($corpo);
                         $rota->corpoEnvioResposta()->attach($corpo);
-                    }else {
+                    } else {
                         $corpo = CorpoEnvioResposta::create([
                             'metodo_id' => $rotas['metodo'],
                             'rota_id' => $rota->id,
@@ -176,16 +178,16 @@ class Importacao extends Model
                 }
             }
 
-            if(!empty($rotas['rota_resposta'])){
-                foreach($rotas['rota_resposta'] as $resposta){
-                    if($resposta['temp_rota_id'] == $rotas['temp_id'] && !empty($resposta['corpo_json'])){
+            if (!empty($rotas['rota_resposta'])) {
+                foreach ($rotas['rota_resposta'] as $resposta) {
+                    if ($resposta['temp_rota_id'] == $rotas['temp_id'] && !empty($resposta['corpo_json'])) {
                         $resposta['rota_id'] = $rota->id;
                         $resposta['metodo_id'] = $rotas['metodo'];
                         $respostas['codigo_http'] = $resposta['codigo_http'];
                         $respostas['tipo_resposta'] = $resposta['tipo_resposta'];
                         $resposta = CorpoEnvioResposta::create($resposta);
                         $rota->corpoEnvioResposta()->attach($resposta);
-                    }else {
+                    } else {
                         $resposta = CorpoEnvioResposta::create([
                             'metodo_id' => $rotas['metodo'],
                             'rota_id' => $rota->id,
@@ -206,9 +208,9 @@ class Importacao extends Model
 
         $json = [];
 
-        if(isset($obj['type']) && $obj['type'] == 'object' && isset($obj['properties'])){
-            foreach($obj['properties'] as $key => $value){
-                if(isset($value['type'])){
+        if (isset($obj['type']) && $obj['type'] == 'object' && isset($obj['properties'])) {
+            foreach ($obj['properties'] as $key => $value) {
+                if (isset($value['type'])) {
                     $json[$key] = self::mountJsonType($value['type']);
                 }
             }
@@ -221,7 +223,7 @@ class Importacao extends Model
     public static function mountJsonType($type)
     {
         $json = null;
-        switch($type){
+        switch ($type) {
             case 'string':
                 $json = 'string';
                 break;
@@ -244,7 +246,8 @@ class Importacao extends Model
         return $json;
     }
 
-    public static function formatDefinitionToArray($ref){
+    public static function formatDefinitionToArray($ref)
+    {
         $ref = str_replace('#/', '', $ref);
         $ref = explode('/', $ref);
         return $ref;
